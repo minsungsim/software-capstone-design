@@ -1,0 +1,22 @@
+{
+  "name": "insert_1m_handler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1486.0",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "fs": "^0.0.1-security",
+    "fs-extra": "^11.1.1",
+    "moment-timezone": "^0.5.43",
+    "node-unzip-2": "^0.2.8",
+    "papaparse": "^5.4.1"
+  }
+}

@@ -1,0 +1,36 @@
+# More information about the configuration file can be found here:
+# https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html
+version = 0.1
+
+[default]
+[default.global.parameters]
+stack_name = "sam-app2"
+
+[default.build.parameters]
+cached = true
+parallel = true
+
+[default.validate.parameters]
+lint = true
+
+[default.deploy.parameters]
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = true
+resolve_s3 = true
+s3_prefix = "lambda-data-pipeline"
+region = "ap-northeast-2"
+disable_rollback = true
+image_repositories = ["getData=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/getdatac4f822ferepo", "storeDataMain=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/storedatamainb0618ec7repo", "storeDataSub=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/storedatasub98f323f6repo", "storeDataMain1h=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/storedatamain1h29b30301repo", "storeDataSub1h=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/storedatasub1h153109aerepo", "fxSub=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/fxsub5754b566repo", "insert1mMain=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/insert1mmain6931ff4arepo", "insert1mSub=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/insert1msubad36bf21repo", "fxMain=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/fxmainee2f0783repo", "backtestCompareFunction=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/backtestcomparefunction8fbb8727repo", "backtest=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/backtest8c5a2f94repo", "startObEven=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/startobeven765529efrepo", "startObOdd=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/startobodd837fbb1crepo", "endObOdd=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/endobodd3ec0c15crepo", "endObEven=346413412601.dkr.ecr.ap-northeast-2.amazonaws.com/lambdadatapipelinec5f9c1ba/endobevencf8d503erepo"]
+stack_name = "lambda-data-pipeline"
+
+[default.package.parameters]
+resolve_s3 = true
+
+[default.sync.parameters]
+watch = true
+
+[default.local_start_api.parameters]
+warm_containers = "EAGER"
+
+[default.local_start_lambda.parameters]
+warm_containers = "EAGER"

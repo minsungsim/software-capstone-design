@@ -1,0 +1,248 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  lambda-data-pipeline
+Transform:
+  - AWS::Serverless-2016-10-31
+
+
+
+Resources:
+  getData:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: 128
+      Timeout: 100
+      Description: get exchange Data
+      Environment: # 환경 변수를 추가하는 부분
+        Variables:
+          VERSION: main
+          CURRENT_PATH: /tmp
+
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /get-data
+            Method: GET
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./src/data_handler
+      Dockerfile: Dockerfile
+  # Each Lambda function is defined by properties:
+  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+
+  storeDataMain:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: 8192
+      Timeout: 120
+      Description: get exchange Data Main
+      Environment:
+        Variables:
+          DATA_VERSION: main
+          CURRENT_PATH: /tmp
+
+      Events:
+        CWSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(* * * * ? *)'
+            Name: storeDataMainEveryMinute
+            Description: storeDataMainEveryMinute
+            Enabled: true
+
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./src/data_main_handler
+      Dockerfile: Dockerfile
+
+  storeDataSub:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: 4096
+      Timeout: 60
+      Description: get exchange Data Sub
+      Environment:
+        Variables:
+          DATA_VERSION: sub
+          CURRENT_PATH: /tmp
+
+      Events:
+        CWSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(* * * * ? *)'
+            Name: storeDataSubEveryMinute
+            Description: storeDataSubEveryMinute
+            Enabled: true
+
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./src/data_main_handler
+      Dockerfile: Dockerfile
+
+  storeDataMain1h:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: 4096
+      Timeout: 60
+      Description: get exchange Data Main 1h
+      Environment:
+        Variables:
+          DATA_VERSION: main
+          CURRENT_PATH: /tmp
+
+      Events:
+        CWSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(0 * * * ? *)'
+            Name: storeDataMainEveryHour
+            Description: storeDataMainEveryHour
+            Enabled: true
+
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./src/data_main_1h_handler
+      Dockerfile: Dockerfile
+
+  storeDataSub1h:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: 4096
+      Timeout: 60
+      Description: get exchange Data Sub 1h
+      Environment:
+        Variables:
+          DATA_VERSION: sub
+          CURRENT_PATH: /tmp
+
+      Events:
+        CWSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(0 * * * ? *)'
+            Name: storeDataSubEveryHour
+            Description: storeDataSubEveryHour
+            Enabled: true
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./src/data_main_1h_handler
+      Dockerfile: Dockerfile
+
+  fxMain:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: 128
+      Timeout: 60
+      Description: fxMain
+      Environment:
+        Variables:
+          DATA_VERSION: main
+          CURRENT_PATH: /tmp
+
+      Events:
+        CWSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(* * * * ? *)'
+            Name: fxMain
+            Description: fxMain
+            Enabled: true
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./src/fx_data_handler
+      Dockerfile: Dockerfile
+
+  fxSub:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: 128
+      Timeout: 60
+      Description: fxSub
+      Environment:
+        Variables:
+          DATA_VERSION: sub
+          CURRENT_PATH: /tmp
+
+      Events:
+        CWSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(* * * * ? *)'
+            Name: fxSub
+            Description: fxSub
+            Enabled: true
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./src/fx_data_handler
+      Dockerfile: Dockerfile
+
+  insert1mMain:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: 4096
+      Timeout: 900
+      Description: insert1mMain
+      Environment:
+        Variables:
+          DATA_VERSION: main
+          CURRENT_PATH: /tmp
+
+      Events:
+        CWSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(0 * * * ? *)'
+            Name: insert1mMain
+            Description: insert1mMain
+            Enabled: true
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./src/insert_1m_handler
+      Dockerfile: Dockerfile
+
+  insert1mSub:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: 4096
+      Timeout: 900
+      Description: insert1mSub
+
+      Environment:
+        Variables:
+          DATA_VERSION: sub
+          CURRENT_PATH: /tmp
+      Events:
+        CWSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(0 * * * ? *)'
+            Name: insert1mSub
+            Description: insert1mSub
+            Enabled: true
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./src/insert_1m_handler
+      Dockerfile: Dockerfile
+
+# This is a Lamb
+Outputs:
+  WebEndpoint:
+    Description: API Gateway endpoint URL for Prod stage
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+# # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Tracing: Active
+  Api:
+    TracingEnabled: true
